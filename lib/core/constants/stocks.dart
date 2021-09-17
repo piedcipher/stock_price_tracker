@@ -1,14 +1,14 @@
 /// Stocks to track
-const Map<Stock, String> stocksToTrack = {
-  Stock.reli: 'RELI',
-  Stock.tcs: 'TCS',
-  Stock.itc: 'ITC',
-  Stock.hdfc: 'HDBK',
-  Stock.infy: 'INFY',
+const Map<Stocks, String> stocksToTrack = {
+  Stocks.reli: 'RELI',
+  Stocks.tcs: 'TCS',
+  Stocks.itc: 'ITC',
+  Stocks.hdfc: 'HDBK',
+  Stocks.infy: 'INFY',
 };
 
 /// Stocks
-enum Stock {
+enum Stocks {
   /// Stock of Reliance Industries
   reli,
 
