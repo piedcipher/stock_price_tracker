@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_price_tracker/api/api_client.dart';
+import 'package:stock_price_tracker/blocs/stocks/stocks_bloc.dart';
+import 'package:stock_price_tracker/blocs/stocks/stocks_event.dart';
+import 'package:stock_price_tracker/blocs/stocks/stocks_state.dart';
+import 'package:stock_price_tracker/core/constants/stocks.dart';
 
 /// home page shows list of stocks
 class HomePage extends StatefulWidget {
@@ -10,6 +16,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late StocksBloc _stocksBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _stocksBloc = StocksBloc(context.read<TickerTapeApiClient>())
+      ..add(
+        StocksFetchEvent(stocksToTrack.values.toList()),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +43,32 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(),
+      body: Center(
+        child: BlocConsumer<StocksBloc, StocksState>(
+          bloc: _stocksBloc,
+          listener: (context, state) async {},
+          builder: (context, state) {
+            if (state is StocksLoadedState) {
+              final stocks = state.stocks;
+              return ListView.builder(
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(stocks[index].sid),
+                  trailing: Text(stocks[index].price.toString()),
+                ),
+                itemCount: stocks.length,
+              );
+            }
+
+            return Container();
+          },
+        ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _stocksBloc.close();
+    super.dispose();
   }
 }
