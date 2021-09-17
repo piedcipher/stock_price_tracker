@@ -1,11 +1,22 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stock_price_tracker/api/api_client.dart';
 import 'package:stock_price_tracker/core/bloc/bloc_observer.dart';
 import 'package:stock_price_tracker/core/navigation/routes.dart';
 
 Future<void> main() async {
   Bloc.observer = StockPriceTrackerAppBlocObserver();
-  runApp(const MyApp());
+  runApp(
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<TickerTapeApiClient>(
+          create: (context) => TickerTapeApiClient(Dio()),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 /// root widget
