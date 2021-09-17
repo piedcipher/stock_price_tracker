@@ -16,7 +16,7 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: AppBar(
         title: const Text('History'),
       ),
-      body: Center(),
+      body: const Center(),
     );
   }
 }

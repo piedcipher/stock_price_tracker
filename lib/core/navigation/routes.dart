@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stock_price_tracker/presentation/pages/home/home_page.dart';
 import 'package:stock_price_tracker/presentation/pages/history/history_page.dart';
+import 'package:stock_price_tracker/presentation/pages/home/home_page.dart';
 
 /// Routes for Stock Price Tracker App
 abstract class Routes {
@@ -22,7 +22,7 @@ abstract class Routes {
 
       case Routes.historyPage:
         return MaterialPageRoute<void>(
-          builder: (context) => HistoryPage(),
+          builder: (context) => const HistoryPage(),
         );
     }
 
