@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_price_tracker/api/api_client.dart';
 import 'package:stock_price_tracker/core/bloc/bloc_observer.dart';
 import 'package:stock_price_tracker/core/navigation/routes.dart';
+import 'package:stock_price_tracker/database/database.dart';
 
 Future<void> main() async {
   Bloc.observer = StockPriceTrackerAppBlocObserver();
@@ -12,6 +13,9 @@ Future<void> main() async {
       providers: [
         RepositoryProvider<TickerTapeApiClient>(
           create: (context) => TickerTapeApiClient(Dio()),
+        ),
+        RepositoryProvider<MyDatabase>(
+          create: (context) => MyDatabase(),
         ),
       ],
       child: const MyApp(),
