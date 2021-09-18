@@ -5,6 +5,7 @@ import 'package:stock_price_tracker/blocs/stocks/stocks_bloc.dart';
 import 'package:stock_price_tracker/blocs/stocks/stocks_event.dart';
 import 'package:stock_price_tracker/blocs/stocks/stocks_state.dart';
 import 'package:stock_price_tracker/core/constants/stocks.dart';
+import 'package:stock_price_tracker/database/database.dart';
 
 /// home page shows list of stocks
 class HomePage extends StatefulWidget {
@@ -21,10 +22,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _stocksBloc = StocksBloc(context.read<TickerTapeApiClient>())
-      ..add(
-        StocksFetchEvent(stocksToTrack.values.toList()),
-      );
+    _stocksBloc = StocksBloc(
+      context.read<TickerTapeApiClient>(),
+      context.read<MyDatabase>(),
+    )..add(StocksFetchEvent(stocksToTrack.values.toList()));
   }
 
   @override
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            return Container();
+            return const Text('Nothing Yet');
           },
         ),
       ),

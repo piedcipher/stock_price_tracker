@@ -2,13 +2,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stock_price_tracker/api/api_client.dart';
 import 'package:stock_price_tracker/blocs/stocks/stocks_event.dart';
 import 'package:stock_price_tracker/blocs/stocks/stocks_state.dart';
+import 'package:stock_price_tracker/database/database.dart';
 
 /// takes care of state-management & business logic for home and history pages
 class StocksBloc extends Bloc<StocksEvent, StocksState> {
   /// constructs this bloc
-  StocksBloc(this._tickerTapeApiClient) : super(const StocksInitialState());
+  StocksBloc(
+    this._tickerTapeApiClient,
+    this._tickerTapeDatabase,
+  ) : super(const StocksInitialState());
 
   final TickerTapeApiClient _tickerTapeApiClient;
+  final MyDatabase _tickerTapeDatabase;
 
   @override
   Stream<StocksState> mapEventToState(StocksEvent event) async* {
@@ -27,7 +32,14 @@ class StocksBloc extends Bloc<StocksEvent, StocksState> {
           'sids': event.stocks.join(','),
         },
       );
-      yield StocksLoadedState(stocks.data);
+      if (stocks.success) {
+        await _tickerTapeDatabase.addStocks(
+          stocks.data.map(stockDataModelToStockCompanion).toList(),
+        );
+        yield StocksLoadedState(stocks.data);
+      } else {
+        yield const StocksErrorState('Error');
+      }
     } on Exception catch (e) {
       yield StocksErrorState(e.toString());
     }
