@@ -94,6 +94,15 @@ class _HomePageState extends State<HomePage> {
                     await Navigator.pushNamed(context, Routes.historyPage);
                   },
                   title: Text(stocks[index].sid),
+                  leading: stocks[index].change > 0
+                      ? const Icon(
+                          Icons.arrow_drop_up,
+                          color: Colors.green,
+                        )
+                      : const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.red,
+                        ),
                   trailing: Text(stocks[index].price.toString()),
                 ),
                 itemCount: stocks.length,
