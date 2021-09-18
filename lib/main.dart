@@ -7,6 +7,7 @@ import 'package:stock_price_tracker/core/navigation/routes.dart';
 import 'package:stock_price_tracker/database/database.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = StockPriceTrackerAppBlocObserver();
   runApp(
     MultiRepositoryProvider(
