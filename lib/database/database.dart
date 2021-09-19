@@ -54,7 +54,9 @@ class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 
   /// stream of stocks
-  Stream<List<Stock>> get watchStocks => select(stocks).watch();
+  Stream<List<Stock>> watchStock(String sid) {
+    return (select(stocks)..where((tbl) => tbl.sid.equals(sid))).watch();
+  }
 
   /// add stocks
   Future<void> addStocks(List<StocksCompanion> entries) async {
