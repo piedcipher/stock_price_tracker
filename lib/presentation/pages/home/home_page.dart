@@ -22,7 +22,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late StocksBloc _stocksBloc;
-  int _stockUpdateQueue = 0;
   bool _liveMode = false;
   late StreamSubscription _stockUpdateStreamSubscription;
   List<data_model.Stock> _latestStockValues = [];
@@ -66,14 +65,11 @@ class _HomePageState extends State<HomePage> {
                 _stockUpdateStreamSubscription =
                     Stream<void>.periodic(const Duration(seconds: 5))
                         .listen((event) {
-                  if (_stockUpdateQueue == 0) {
-                    _stocksBloc.add(
-                      StocksFetchEvent(
-                        stocksToTrack.values.toList(),
-                      ),
-                    );
-                  }
-                  _stockUpdateQueue++;
+                  _stocksBloc.add(
+                    StocksFetchEvent(
+                      stocksToTrack.values.toList(),
+                    ),
+                  );
                 });
               } else {
                 _stockUpdateStreamSubscription.cancel();
@@ -88,12 +84,7 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: BlocConsumer<StocksBloc, StocksState>(
           bloc: _stocksBloc,
-          listener: (context, state) async {
-            if (state is StocksLoadedState && _stockUpdateQueue != 0) {
-              _stockUpdateQueue--;
-              _stocksBloc.add(StocksFetchEvent(stocksToTrack.values.toList()));
-            }
-          },
+          listener: (context, state) async {},
           buildWhen: (prev, current) =>
               current is StocksInitialState || current is StocksLoadedState,
           builder: (context, state) {
