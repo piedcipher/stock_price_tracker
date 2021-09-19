@@ -37,6 +37,11 @@ class Stocks extends Table {
 
   /// date of the stock
   TextColumn get date => text()();
+
+  /// timestamp on which stock was fetched
+  TextColumn get fetchedDate => text()
+      .clientDefault(() => DateTime.now().toUtc().toString())
+      .named('fetched_date')();
 }
 
 LazyDatabase _openConnection() {

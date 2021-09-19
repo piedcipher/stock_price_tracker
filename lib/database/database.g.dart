@@ -34,6 +34,9 @@ class Stock extends DataClass implements Insertable<Stock> {
 
   /// date of the stock
   final String date;
+
+  /// timestamp on which stock was fetched
+  final String fetchedDate;
   Stock(
       {required this.id,
       required this.sid,
@@ -43,7 +46,8 @@ class Stock extends DataClass implements Insertable<Stock> {
       required this.high,
       required this.low,
       required this.volume,
-      required this.date});
+      required this.date,
+      required this.fetchedDate});
   factory Stock.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -66,6 +70,8 @@ class Stock extends DataClass implements Insertable<Stock> {
           .mapFromDatabaseResponse(data['${effectivePrefix}volume'])!,
       date: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}date'])!,
+      fetchedDate: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}fetched_date'])!,
     );
   }
   @override
@@ -80,6 +86,7 @@ class Stock extends DataClass implements Insertable<Stock> {
     map['low'] = Variable<double>(low);
     map['volume'] = Variable<int>(volume);
     map['date'] = Variable<String>(date);
+    map['fetched_date'] = Variable<String>(fetchedDate);
     return map;
   }
 
@@ -94,6 +101,7 @@ class Stock extends DataClass implements Insertable<Stock> {
       low: Value(low),
       volume: Value(volume),
       date: Value(date),
+      fetchedDate: Value(fetchedDate),
     );
   }
 
@@ -110,6 +118,7 @@ class Stock extends DataClass implements Insertable<Stock> {
       low: serializer.fromJson<double>(json['low']),
       volume: serializer.fromJson<int>(json['volume']),
       date: serializer.fromJson<String>(json['date']),
+      fetchedDate: serializer.fromJson<String>(json['fetchedDate']),
     );
   }
   @override
@@ -125,6 +134,7 @@ class Stock extends DataClass implements Insertable<Stock> {
       'low': serializer.toJson<double>(low),
       'volume': serializer.toJson<int>(volume),
       'date': serializer.toJson<String>(date),
+      'fetchedDate': serializer.toJson<String>(fetchedDate),
     };
   }
 
@@ -137,7 +147,8 @@ class Stock extends DataClass implements Insertable<Stock> {
           double? high,
           double? low,
           int? volume,
-          String? date}) =>
+          String? date,
+          String? fetchedDate}) =>
       Stock(
         id: id ?? this.id,
         sid: sid ?? this.sid,
@@ -148,6 +159,7 @@ class Stock extends DataClass implements Insertable<Stock> {
         low: low ?? this.low,
         volume: volume ?? this.volume,
         date: date ?? this.date,
+        fetchedDate: fetchedDate ?? this.fetchedDate,
       );
   @override
   String toString() {
@@ -160,7 +172,8 @@ class Stock extends DataClass implements Insertable<Stock> {
           ..write('high: $high, ')
           ..write('low: $low, ')
           ..write('volume: $volume, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('fetchedDate: $fetchedDate')
           ..write(')'))
         .toString();
   }
@@ -178,8 +191,12 @@ class Stock extends DataClass implements Insertable<Stock> {
                       change.hashCode,
                       $mrjc(
                           high.hashCode,
-                          $mrjc(low.hashCode,
-                              $mrjc(volume.hashCode, date.hashCode)))))))));
+                          $mrjc(
+                              low.hashCode,
+                              $mrjc(
+                                  volume.hashCode,
+                                  $mrjc(date.hashCode,
+                                      fetchedDate.hashCode))))))))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -192,7 +209,8 @@ class Stock extends DataClass implements Insertable<Stock> {
           other.high == this.high &&
           other.low == this.low &&
           other.volume == this.volume &&
-          other.date == this.date);
+          other.date == this.date &&
+          other.fetchedDate == this.fetchedDate);
 }
 
 class StocksCompanion extends UpdateCompanion<Stock> {
@@ -205,6 +223,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
   final Value<double> low;
   final Value<int> volume;
   final Value<String> date;
+  final Value<String> fetchedDate;
   const StocksCompanion({
     this.id = const Value.absent(),
     this.sid = const Value.absent(),
@@ -215,6 +234,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
     this.low = const Value.absent(),
     this.volume = const Value.absent(),
     this.date = const Value.absent(),
+    this.fetchedDate = const Value.absent(),
   });
   StocksCompanion.insert({
     this.id = const Value.absent(),
@@ -226,6 +246,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
     required double low,
     required int volume,
     required String date,
+    this.fetchedDate = const Value.absent(),
   })  : sid = Value(sid),
         price = Value(price),
         close = Value(close),
@@ -244,6 +265,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
     Expression<double>? low,
     Expression<int>? volume,
     Expression<String>? date,
+    Expression<String>? fetchedDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -255,6 +277,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
       if (low != null) 'low': low,
       if (volume != null) 'volume': volume,
       if (date != null) 'date': date,
+      if (fetchedDate != null) 'fetched_date': fetchedDate,
     });
   }
 
@@ -267,7 +290,8 @@ class StocksCompanion extends UpdateCompanion<Stock> {
       Value<double>? high,
       Value<double>? low,
       Value<int>? volume,
-      Value<String>? date}) {
+      Value<String>? date,
+      Value<String>? fetchedDate}) {
     return StocksCompanion(
       id: id ?? this.id,
       sid: sid ?? this.sid,
@@ -278,6 +302,7 @@ class StocksCompanion extends UpdateCompanion<Stock> {
       low: low ?? this.low,
       volume: volume ?? this.volume,
       date: date ?? this.date,
+      fetchedDate: fetchedDate ?? this.fetchedDate,
     );
   }
 
@@ -311,6 +336,9 @@ class StocksCompanion extends UpdateCompanion<Stock> {
     if (date.present) {
       map['date'] = Variable<String>(date.value);
     }
+    if (fetchedDate.present) {
+      map['fetched_date'] = Variable<String>(fetchedDate.value);
+    }
     return map;
   }
 
@@ -325,7 +353,8 @@ class StocksCompanion extends UpdateCompanion<Stock> {
           ..write('high: $high, ')
           ..write('low: $low, ')
           ..write('volume: $volume, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('fetchedDate: $fetchedDate')
           ..write(')'))
         .toString();
   }
@@ -373,9 +402,16 @@ class $StocksTable extends Stocks with TableInfo<$StocksTable, Stock> {
   late final GeneratedColumn<String?> date = GeneratedColumn<String?>(
       'date', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _fetchedDateMeta =
+      const VerificationMeta('fetchedDate');
+  late final GeneratedColumn<String?> fetchedDate = GeneratedColumn<String?>(
+      'fetched_date', aliasedName, false,
+      typeName: 'TEXT',
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now().toUtc().toString());
   @override
   List<GeneratedColumn> get $columns =>
-      [id, sid, price, close, change, high, low, volume, date];
+      [id, sid, price, close, change, high, low, volume, date, fetchedDate];
   @override
   String get aliasedName => _alias ?? 'stocks';
   @override
@@ -435,6 +471,12 @@ class $StocksTable extends Stocks with TableInfo<$StocksTable, Stock> {
           _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
+    }
+    if (data.containsKey('fetched_date')) {
+      context.handle(
+          _fetchedDateMeta,
+          fetchedDate.isAcceptableOrUnknown(
+              data['fetched_date']!, _fetchedDateMeta));
     }
     return context;
   }

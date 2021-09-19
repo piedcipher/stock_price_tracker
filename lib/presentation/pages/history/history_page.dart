@@ -98,23 +98,15 @@ class _HistoryPageState extends State<HistoryPage> {
                                 ),
                               ],
                               titlesData: FlTitlesData(
-                                rightTitles: SideTitles(
-                                  showTitles: false,
-                                ),
                                 bottomTitles: SideTitles(
                                   showTitles: true,
-                                  getTitles: (val) => DateFormat(
-                                    'MMM d, y\nH:m:s',
-                                  )
-                                      .format(
-                                        DateTime.parse(
-                                          history[val.toInt() - 1].date,
-                                        ),
-                                      )
-                                      .toString(),
-                                ),
-                                topTitles: SideTitles(
-                                  showTitles: false,
+                                  getTitles: (val) => "${DateFormat(
+                                    'dd-MM-yyyy\nhh:mm:ss',
+                                  ).format(
+                                    DateTime.parse(
+                                      history[val.toInt() - 1].fetchedDate,
+                                    ).toLocal(),
+                                  )}\n",
                                 ),
                               ),
                             ),
