@@ -9,6 +9,7 @@ import 'package:stock_price_tracker/blocs/stocks/stocks_state.dart';
 import 'package:stock_price_tracker/core/constants/stocks.dart';
 import 'package:stock_price_tracker/core/navigation/routes.dart';
 import 'package:stock_price_tracker/database/database.dart';
+import 'package:stock_price_tracker/models/stock.dart' as data_model;
 
 /// home page shows list of stocks
 class HomePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   int _stockUpdateQueue = 0;
   bool _liveMode = false;
   late StreamSubscription _stockUpdateStreamSubscription;
+  List<data_model.Stock> _latestStockValues = [];
 
   @override
   void initState() {
@@ -42,7 +44,16 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () async {
-              await Navigator.pushNamed(context, Routes.historyPage);
+              if (_latestStockValues.isNotEmpty) {
+                _latestStockValues.sort(
+                  (prev, current) => prev.price.compareTo(current.price),
+                );
+                await Navigator.pushNamed(
+                  context,
+                  Routes.historyPage,
+                  arguments: _latestStockValues.last.sid,
+                );
+              }
             },
             icon: const Icon(Icons.bar_chart),
           ),
@@ -88,10 +99,15 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is StocksLoadedState) {
               final stocks = state.stocks;
+              _latestStockValues = stocks;
               return ListView.builder(
                 itemBuilder: (context, index) => ListTile(
                   onTap: () async {
-                    await Navigator.pushNamed(context, Routes.historyPage);
+                    await Navigator.pushNamed(
+                      context,
+                      Routes.historyPage,
+                      arguments: stocks[index].sid,
+                    );
                   },
                   title: Text(stocks[index].sid),
                   leading: stocks[index].change > 0

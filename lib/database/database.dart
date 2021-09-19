@@ -83,4 +83,3 @@ StocksCompanion stockDataModelToStockCompanion(data_model.Stock s) {
     date: Value<String>(s.date),
   );
 }
-

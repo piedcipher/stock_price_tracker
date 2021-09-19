@@ -22,7 +22,9 @@ abstract class Routes {
 
       case Routes.historyPage:
         return MaterialPageRoute<void>(
-          builder: (context) => const HistoryPage(),
+          builder: (context) => HistoryPage(
+            sid: routeSettings.arguments! as String,
+          ),
         );
     }
 
