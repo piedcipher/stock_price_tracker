@@ -43,6 +43,8 @@ class _HistoryPageState extends State<HistoryPage> {
               final highList = state.history.map((e) => e.high).toList()
                 ..sort();
               var index = 1;
+              final percentageChange =
+                  state.history.last.change / state.history.last.price * 100;
               return Column(
                 children: [
                   const SizedBox(height: 22),
@@ -56,18 +58,36 @@ class _HistoryPageState extends State<HistoryPage> {
                           fontSize: 20,
                         ),
                       ),
-                      if (state.history.last.change > 0)
-                        const Icon(
-                          Icons.arrow_drop_up,
-                          color: Colors.green,
-                          size: 50,
-                        )
-                      else
-                        const Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.red,
-                          size: 50,
+                      TextButton.icon(
+                        onPressed: null,
+                        icon: state.history.last.change > 0
+                            ? const Icon(
+                                Icons.arrow_drop_up,
+                                color: Colors.green,
+                                size: 40,
+                              )
+                            : const Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.red,
+                                size: 40,
+                              ),
+                        label: Text(
+                          state.history.last.change.toString(),
+                          style: TextStyle(
+                            color: state.history.last.change > 0
+                                ? Colors.green
+                                : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ),
+                      Text(
+                        '(${percentageChange.toStringAsFixed(2)}%)',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
