@@ -72,47 +72,49 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   const SizedBox(height: 10),
                   Expanded(
-                    child: SingleChildScrollView(
+                    child: ListView(
                       scrollDirection: Axis.horizontal,
-                      child: Container(
-                        margin: const EdgeInsets.all(12),
-                        padding: const EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: state.history.length * 150,
-                          child: LineChart(
-                            LineChartData(
-                              minY: 0,
-                              maxY: highList.last + 500,
-                              minX: 1,
-                              maxX: history.length.toDouble(),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: history
-                                      .map(
-                                        (e) => FlSpot(
-                                          (index++).toDouble(),
-                                          e.price,
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ],
-                              titlesData: FlTitlesData(
-                                bottomTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitles: (val) => "${DateFormat(
-                                    'dd-MM-yyyy\nhh:mm:ss',
-                                  ).format(
-                                    DateTime.parse(
-                                      history[val.toInt() - 1].fetchedDate,
-                                    ).toLocal(),
-                                  )}\n",
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
+                          child: SizedBox(
+                            width: state.history.length * 150,
+                            child: LineChart(
+                              LineChartData(
+                                minY: 0,
+                                maxY: highList.last + 500,
+                                minX: 1,
+                                maxX: history.length.toDouble(),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: history
+                                        .map(
+                                          (e) => FlSpot(
+                                            (index++).toDouble(),
+                                            e.price,
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ],
+                                titlesData: FlTitlesData(
+                                  bottomTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitles: (val) => "${DateFormat(
+                                      'dd-MM-yyyy\nhh:mm:ss',
+                                    ).format(
+                                      DateTime.parse(
+                                        history[val.toInt() - 1].fetchedDate,
+                                      ).toLocal(),
+                                    )}\n",
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
