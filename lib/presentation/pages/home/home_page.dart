@@ -32,7 +32,12 @@ class _HomePageState extends State<HomePage> {
     _stocksBloc = StocksBloc(
       context.read<TickerTapeApiClient>(),
       context.read<MyDatabase>(),
-    )..add(StocksFetchEvent(stocksToTrack.values.toList()));
+    )..add(
+        StocksFetchEvent(
+          stocksToTrack.values.toList(),
+          shouldStoreInDatabase: false,
+        ),
+      );
   }
 
   @override

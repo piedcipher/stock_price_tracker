@@ -33,9 +33,11 @@ class StocksBloc extends Bloc<StocksEvent, StocksState> {
         },
       );
       if (stocks.success) {
-        await _tickerTapeDatabase.addStocks(
-          stocks.data.map(stockDataModelToStockCompanion).toList(),
-        );
+        if (event.shouldStoreInDatabase) {
+          await _tickerTapeDatabase.addStocks(
+            stocks.data.map(stockDataModelToStockCompanion).toList(),
+          );
+        }
         yield StocksLoadedState(stocks.data);
       } else {
         yield const StocksErrorState('Error');
